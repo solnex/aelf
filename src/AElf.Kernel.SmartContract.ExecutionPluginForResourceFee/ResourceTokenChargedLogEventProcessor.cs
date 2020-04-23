@@ -38,7 +38,7 @@ namespace AElf.Kernel.SmartContract.ExecutionPluginForResourceFee
                 GetInterestedEvent<ResourceTokenCharged>(smartContractAddressDto.SmartContractAddress.Address);
 
             if (!smartContractAddressDto.Irreversible) return interestedEvent;
-            
+
             InterestedEvent = interestedEvent;
 
             return InterestedEvent;
@@ -91,11 +91,14 @@ namespace AElf.Kernel.SmartContract.ExecutionPluginForResourceFee
                 }
             }
 
-            await _totalTotalResourceTokensMapsProvider.SetTotalResourceTokensMapsAsync(new BlockIndex
+            if (totalResourceTokensMaps.Value.Any())
             {
-                BlockHash = blockHash,
-                BlockHeight = blockHeight
-            }, totalResourceTokensMaps);
+                await _totalTotalResourceTokensMapsProvider.SetTotalResourceTokensMapsAsync(new BlockIndex
+                {
+                    BlockHash = blockHash,
+                    BlockHeight = blockHeight
+                }, totalResourceTokensMaps);
+            }
         }
     }
 }
