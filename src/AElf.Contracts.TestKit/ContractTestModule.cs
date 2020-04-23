@@ -61,8 +61,7 @@ namespace AElf.Contracts.TestKit
         typeof(SmartContractExecutionAElfModule),
         typeof(TransactionPoolAElfModule),
         typeof(ChainControllerAElfModule),
-        typeof(CSharpRuntimeAElfModule),
-        typeof(ContractNamesAElfModule))]
+        typeof(CSharpRuntimeAElfModule))]
     public class ContractTestModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
