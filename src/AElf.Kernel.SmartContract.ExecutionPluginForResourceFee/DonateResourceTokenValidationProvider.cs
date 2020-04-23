@@ -77,11 +77,6 @@ namespace AElf.Kernel.SmartContract.ExecutionPluginForResourceFee
                 ContractAddress = tokenContractAddress
             }).GetLatestTotalResourceTokensMapsHash.CallAsync(new Empty());
 
-            if (hashFromState.Value.IsEmpty)
-            {
-                return true;
-            }
-
             var totalResourceTokensMapsFromProvider =
                 await _totalResourceTokensMapsProvider.GetTotalResourceTokensMapsAsync(new ChainContext
                 {
@@ -89,19 +84,18 @@ namespace AElf.Kernel.SmartContract.ExecutionPluginForResourceFee
                     BlockHeight = block.Header.Height - 1
                 });
 
-            var hashFromProvider = HashHelper.ComputeFromMessage(totalResourceTokensMapsFromProvider);
-
             if (hashFromState == HashHelper.ComputeFromMessage(new TotalResourceTokensMaps
             {
                 BlockHash = block.Header.PreviousBlockHash,
                 BlockHeight = block.Header.Height - 1
             }))
             {
-                if (totalResourceTokensMapsFromProvider == null || hashFromProvider == hashFromState) return true;
+                if (totalResourceTokensMapsFromProvider == null) return true;
                 return totalResourceTokensMapsFromProvider.BlockHeight != block.Header.Height - 1;
             }
 
             if (totalResourceTokensMapsFromProvider == null) return false;
+            var hashFromProvider = HashHelper.ComputeFromMessage(totalResourceTokensMapsFromProvider);
             return hashFromState == hashFromProvider;
         }
     }
